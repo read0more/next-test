@@ -1,11 +1,20 @@
 import type { NextPage } from 'next';
-import Li from '../components/Li';
+import Link from 'next/link';
 
 const Home: NextPage = () => {
   return (
-    <ul>
-      <Li img="https://picsum.photos/400/500" index="1" />
-    </ul>
+    <Link href="/product">
+      <a
+        style={{
+          display: 'block',
+          width: '500px',
+          height: '500px',
+          background: 'brown',
+        }}
+      >
+        Go To Product List
+      </a>
+    </Link>
   );
 };
 

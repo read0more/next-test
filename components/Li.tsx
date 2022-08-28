@@ -10,8 +10,8 @@ export type Props = {
 const Li: NextPage<Props> = ({ index, img }) => {
   return (
     <li>
+      <b>{index}</b>
       <figure>
-        <b>{index}</b>
         <Image src={img} alt="sample img" width={300} height={300} />
         <figcaption>
           Lorem Ipsum is simply dummy text of the printing and typesetting
