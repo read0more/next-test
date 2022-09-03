@@ -6,7 +6,7 @@ const nextConfig = {
     domains: ['picsum.photos'],
   },
   experimental: {
-    // scrollRestoration: true,
+    scrollRestoration: true,
   },
 };
 
