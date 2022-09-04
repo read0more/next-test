@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
 const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
@@ -7,6 +8,12 @@ const nextConfig = {
   },
   experimental: {
     scrollRestoration: true,
+  },
+  sassOptions: {
+    includePaths: [path.join(__dirname, 'styles')],
+  },
+  compiler: {
+    styledComponents: true,
   },
 };
 
