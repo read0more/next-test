@@ -24,3 +24,37 @@ a {
     background: black;
   }
 }
+
+.swiper-pagination-custom {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  z-index: z('default') + 5;
+  display: flex;
+  justify-content: center;
+}
+
+.fraction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 16px 3px 16px;
+  text-align: center;
+  border-radius: 21px;
+  background-color: rgba(#000000, 0.4);
+}
+
+em {
+  font-weight: 700;
+  color: #fff;
+}
+
+.btn-expand {
+  display: block;
+  margin: -3px -16px -3px 0;
+  height: 21px;
+  width: 21px;
+  text-indent: -9999px;
+  background: inline-svg('icon-plus-02', #fff) center 6px no-repeat;
+  background-size: 8px;
+}
