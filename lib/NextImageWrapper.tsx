@@ -28,7 +28,7 @@ const Wrapper = styled.div<StyledProps>`
 
 const NextImageWrapper: React.FC<Props> = ({ nextImageProps }: Props) => {
   return (
-    <Wrapper>
+    <Wrapper className="swiper-lazy">
       <Image {...nextImageProps} />
     </Wrapper>
   );

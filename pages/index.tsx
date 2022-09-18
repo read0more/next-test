@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import SwiperCore, { Autoplay, Pagination } from 'swiper';
+import SwiperCore, { Autoplay, Lazy, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import json from '@/mock_data.json';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
@@ -12,68 +12,101 @@ import NextImageWrapper from '@/lib/NextImageWrapper';
 SwiperCore.use([Pagination]);
 SwiperCore.use([Autoplay]);
 
+type imageProps = {
+  src: string;
+  srcset: string;
+};
+
 const Home: NextPage = () => {
   // eslint-disable-next-line no-unused-vars
-  const [_, setSelectedIndex] = useState<number>(0);
-  function geSlideDataIndex(swipe: SwiperCore) {
-    let { activeIndex } = swipe;
-    const slidesLen = swipe.slides.length;
-    if (swipe.params.loop) {
-      switch (swipe.activeIndex) {
-        case 0:
-          activeIndex = slidesLen - 3;
-          break;
-        case slidesLen - 1:
-          activeIndex = 0;
-          break;
-        default:
-          activeIndex -= 1;
-      }
-    }
-    return activeIndex;
-  }
+  const [optimizedImages, setOptimizedImages] = useState<imageProps[]>();
+  const optimizedImagesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!optimizedImagesRef?.current) return;
+
+    const images = optimizedImagesRef.current.querySelectorAll('img');
+    setOptimizedImages(
+      Array.from(images).map((image) => {
+        return {
+          src: image.src,
+          srcset: image.srcset,
+        };
+      })
+    );
+  }, [optimizedImagesRef.current]);
+
   return (
     <>
-      <div style={{ backgroundColor: 'white' }}>
+      <div style={{ backgroundColor: 'white' }} className="swiper-container">
         <Swiper
+          style={{
+            position: 'absolute',
+            width: '1px',
+            height: '1px',
+            top: '0',
+            left: '0',
+          }}
+          modules={[Lazy]}
           autoHeight
-          slidesPerView={1}
           tag="div"
           loop
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
-          onInit={(_swiper) => {
-            setSelectedIndex(_swiper.realIndex);
-          }}
-          onSlideChangeTransitionEnd={(_swiper) => {
-            // setSelectedIndex(_swiper.realIndex);
-          }}
-          onSlideChange={(_swiper) => {
-            setSelectedIndex(geSlideDataIndex(_swiper));
+          lazy={{ loadPrevNextAmount: 3, loadPrevNext: true }}
+          autoplay={{ delay: 100, disableOnInteraction: false }}
+          onTransitionStart={(swiper) => {
+            // todo: 두 번째 스와이퍼에 강제로 src 변경하게?
           }}
         >
-          {json.data.map(({ index, img }) => {
-            return (
-              <SwiperSlide key={index}>
-                {/* <img src={img} alt={''} /> */}
-                {/* <NextImageWrapper
-                      nextImageProps={{
-                        src: 'https://picsum.photos/500/500',
-                        alt: 'alt',
-                        layout: 'fill',
-                        // priority: true,
-                      }}
-                    /> */}
-                <NextImageWrapper
-                  nextImageProps={{
-                    src: img,
-                    alt: 'alt',
-                    layout: 'fill',
-                    // priority: true,
-                  }}
-                />
-              </SwiperSlide>
-            );
-          })}
+          {json.data.map(({ index, img }) => (
+            <SwiperSlide key={index}>
+              {/* <img src={src} srcSet={srcset} className="swiper-lazy" /> */}
+              <NextImageWrapper
+                key={index}
+                nextImageProps={{
+                  src: img,
+                  layout: 'fill',
+                  priority: index === '1',
+                }}
+              />
+              {/* <div
+                style={{ display: '0' }}
+                ref={optimizedImagesRef}
+                className="swiper-lazy"
+              >
+                <Image src={img} layout="fill" key={index} />;
+              </div> */}
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <Swiper
+          modules={[Lazy]}
+          autoHeight
+          tag="div"
+          loop
+          lazy={{ loadPrevNextAmount: 3, loadPrevNext: true }}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          onTransitionStart={(swiper) => {}}
+        >
+          {json.data.map(({ index, img }) => (
+            <SwiperSlide key={index}>
+              {/* <img src={src} srcSet={srcset} className="swiper-lazy" /> */}
+              <NextImageWrapper
+                key={index}
+                nextImageProps={{
+                  src: img,
+                  layout: 'fill',
+                  priority: index === '1',
+                }}
+              />
+              {/* <div
+                style={{ display: '0' }}
+                ref={optimizedImagesRef}
+                className="swiper-lazy"
+              >
+                <Image src={img} layout="fill" key={index} />;
+              </div> */}
+            </SwiperSlide>
+          ))}
         </Swiper>
       </div>
 
