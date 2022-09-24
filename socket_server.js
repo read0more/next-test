@@ -3,6 +3,8 @@ const http = require('http');
 const express = require('express');
 const { Server } = require('socket.io');
 // eslint-disable-next-line import/no-extraneous-dependencies
+const { createAdapter } = require('@socket.io/redis-adapter');
+const { createClient } = require('redis');
 const { instrument } = require('@socket.io/admin-ui');
 
 const app = express();
@@ -19,15 +21,21 @@ const io = new Server(server, {
   },
 });
 
-instrument(io, {
-  auth: false,
-});
+const pubClient = createClient({ url: process.env.REDIS_URL });
+const subClient = pubClient.duplicate();
 
-io.on('connection', (socket) => {
-  socket.join(roomName);
-  socket.on('enter', (nickname) => {
-    socket.to(roomName).emit('enter', `${nickname}엔터`);
+Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+  io.adapter(createAdapter(pubClient, subClient));
+  instrument(io, {
+    auth: false,
   });
-});
 
-server.listen(process.env.SERVER_PORT, handleListen);
+  io.on('connection', (socket) => {
+    socket.join(roomName);
+    socket.on('enter', (nickname) => {
+      socket.to(roomName).emit('enter', `${nickname}엔터`);
+    });
+  });
+
+  server.listen(process.env.SERVER_PORT, handleListen);
+});
