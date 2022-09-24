@@ -40,3 +40,5 @@ next-env.d.ts
 
 localhost.crt
 localhost.key
+
+.env
