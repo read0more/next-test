@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 
 const socketClient = io(process.env.NEXT_PUBLIC_SERVER_URL as string, {
   path: '/socket.io/socket.io.js',
+  transports: ['websocket'],
 });
 
 const Socket: NextPage = () => {
