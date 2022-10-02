@@ -40,52 +40,14 @@ const Home: NextPage = () => {
     <>
       <div style={{ backgroundColor: 'white' }} className="swiper-container">
         <Swiper
-          style={{
-            position: 'absolute',
-            width: '1px',
-            height: '1px',
-            top: '0',
-            left: '0',
-          }}
-          modules={[Lazy]}
-          autoHeight
-          tag="div"
-          loop
-          lazy={{ loadPrevNextAmount: 3, loadPrevNext: true }}
-          autoplay={{ delay: 100, disableOnInteraction: false }}
-          onTransitionStart={(swiper) => {
-            // todo: 두 번째 스와이퍼에 강제로 src 변경하게?
-          }}
-        >
-          {json.data.map(({ index, img }) => (
-            <SwiperSlide key={index}>
-              {/* <img src={src} srcSet={srcset} className="swiper-lazy" /> */}
-              <NextImageWrapper
-                key={index}
-                nextImageProps={{
-                  src: img,
-                  layout: 'fill',
-                  priority: index === '1',
-                }}
-              />
-              {/* <div
-                style={{ display: '0' }}
-                ref={optimizedImagesRef}
-                className="swiper-lazy"
-              >
-                <Image src={img} layout="fill" key={index} />;
-              </div> */}
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <Swiper
           modules={[Lazy]}
           autoHeight
           tag="div"
           loop
           lazy={{ loadPrevNextAmount: 3, loadPrevNext: true }}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
-          onTransitionStart={(swiper) => {}}
+          observer={true}
+          observeParents={true}
         >
           {json.data.map(({ index, img }) => (
             <SwiperSlide key={index}>
