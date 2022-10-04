@@ -1,0 +1,10 @@
+@import "/styles/functions.scss";
+
+.box {
+  display: flex;
+  flex-direction: column;
+  margin-left: pow(4, 3) * 1px;
+  .text {
+    color: red;
+  }
+}
