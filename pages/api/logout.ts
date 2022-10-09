@@ -1,19 +1,13 @@
 import { withSessionRoute } from 'lib/withSession';
 
-export type User = {
-  id: string;
-  admin: boolean;
-  isLoggedIn: boolean;
-};
-
-declare module 'iron-session' {
-  // eslint-disable-next-line no-unused-vars
-  interface IronSessionData {
-    user?: User;
-  }
-}
-
 export default withSessionRoute(async (req, res) => {
   req.session.destroy();
+  let redirectTo = req.query?.redirectTo;
+  redirectTo = Array.isArray(redirectTo) ? redirectTo[0] : redirectTo;
+
+  if (redirectTo) {
+    return res.redirect(redirectTo);
+  }
+
   res.send({ ok: true });
 });
