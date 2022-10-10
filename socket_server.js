@@ -13,7 +13,9 @@ const app = express();
 
 const roomName = 'room1';
 const handleListen = () =>
-  console.log(`Listening on http://localhost:${process.env.SERVER_PORT}`);
+  console.log(
+    `Listening on http://localhost:${process.env.SOCKET_SERVER_PORT}`
+  );
 
 app.get('/', (req, res) => {
   res.end('socket server');
@@ -45,5 +47,5 @@ Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
     });
   });
 
-  server.listen(process.env.SERVER_PORT, handleListen);
+  server.listen(process.env.SOCKET_SERVER_PORT, handleListen);
 });

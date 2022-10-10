@@ -20,3 +20,18 @@ export const google = async () => {
 
   return { googleIssuer, googleClient };
 };
+
+export const custom = async () => {
+  const customIssuer = await Issuer.discover(
+    `http://localhost:${process.env.OIDC_SERVER_PORT}`
+  );
+
+  const customClient = new customIssuer.Client({
+    client_id: 'oidcCLIENT',
+    client_secret: 'Some_super_secret',
+    redirect_uris: ['http://localhost:3000/api/custom_callback'],
+    response_types: ['code'],
+  });
+
+  return { customIssuer, customClient };
+};

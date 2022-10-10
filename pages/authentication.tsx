@@ -12,7 +12,11 @@ export default function Authentication({ isLoggedIn }: Props) {
       {isLoggedIn ? (
         <Link href="/api/logout?redirectTo=/authentication">Logout</Link>
       ) : (
-        <Link href="/api/login">Login</Link>
+        <>
+          <Link href="/api/custom_login">Custom Login</Link>
+          <br />
+          <Link href="/api/google_login">Google Login</Link>
+        </>
       )}
     </div>
   );
