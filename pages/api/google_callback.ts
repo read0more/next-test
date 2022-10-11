@@ -1,19 +1,19 @@
+import GoogleOpenId from '@/lib/openId/GoogleOpenId';
 import { withSessionRoute } from 'lib/withSession';
 import { deserializeAuthState, getAuthStateCookie } from '@/lib/state';
-import { google } from '@/lib/openId';
 
 export default withSessionRoute(async (req, res) => {
-  const { googleClient } = await google();
+  const googleOpenId = await GoogleOpenId.getInstance();
 
   const state = getAuthStateCookie(req);
   const { backToPath } = deserializeAuthState(state);
-  const params = googleClient.callbackParams(req);
-  const tokenSet = await googleClient.callback(
-    `${process.env.CLIENT_URL}/api/google_callback`,
+  const params = googleOpenId.client.callbackParams(req);
+  const tokenSet = await googleOpenId.client.callback(
+    process.env.GOOGLE_OPENID_REDIRECT_URI!,
     params,
     { state }
   );
-  const user = await googleClient!.userinfo(tokenSet);
+  const user = await googleOpenId.client.userinfo(tokenSet);
 
   req.session.user = {
     id: user.name!,

@@ -14,7 +14,7 @@ const configuration = {
   },
 };
 
-// todo: refresh token도 발급하게, openId, login, callback 부분 추상화
+// todo: refresh token도 발급하게, openId, login, callback 부분 추상화한 부분 이용해서 중복 코드 제거
 const oidc = new Provider('http://localhost:3002', {
   ...configuration,
   claims: {
