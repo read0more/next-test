@@ -1,26 +1,19 @@
-import { BaseClient, Issuer } from 'openid-client';
+import { Issuer } from 'openid-client';
 import OpenId from './OpenId';
 
-export default class CustomOpenId implements OpenId {
+export default class CustomOpenId extends OpenId {
   // eslint-disable-next-line no-use-before-define
   private static instance: CustomOpenId;
-
-  // eslint-disable-next-line no-useless-constructor
-  private constructor(
-    public issuer: Issuer<BaseClient>,
-    public client: BaseClient
-  ) {}
 
   static async getInstance() {
     if (!CustomOpenId.instance) {
       const issuer = await Issuer.discover(
-        `http://localhost:${process.env.OIDC_SERVER_PORT}`
+        process.env.CUSTOM_OPENID_SERVER_URI!
       );
-
       const client = new issuer.Client({
-        client_id: 'oidcCLIENT',
-        client_secret: 'Some_super_secret',
-        redirect_uris: ['http://localhost:3000/api/custom_callback'],
+        client_id: process.env.CUSTOM_OPENID_CLIENT!,
+        client_secret: process.env.CUSTOM_OPENID_SECRET!,
+        redirect_uris: [process.env.CUSTOM_OPENID_REDIRECT_URI!], // redirect_uris가 2개 이상이라면 OIDC 서버로 넘어갈 때 redirect_uri를 query string에 넣어줘야한다.
         response_types: ['code'],
       });
 

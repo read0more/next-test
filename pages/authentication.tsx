@@ -13,9 +13,17 @@ export default function Authentication({ isLoggedIn }: Props) {
         <Link href="/api/logout?redirectTo=/authentication">Logout</Link>
       ) : (
         <>
-          <Link href="/api/custom_login">Custom Login</Link>
+          <Link
+            href={`/api/openid/login/custom?redirect_uri=${process.env.CUSTOM_OPENID_REDIRECT_URI}`}
+          >
+            Custom Login
+          </Link>
           <br />
-          <Link href="/api/google_login">Google Login</Link>
+          <Link
+            href={`/api/openid/login/google?redirect_uri=${process.env.GOOGLE_OPENID_REDIRECT_URI}`}
+          >
+            Google Login
+          </Link>
         </>
       )}
     </div>

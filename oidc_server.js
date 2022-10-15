@@ -1,11 +1,12 @@
+require('dotenv').config();
 const { Provider } = require('oidc-provider');
 const configuration = {
   clients: [
     {
-      client_id: 'oidcCLIENT',
-      client_secret: 'Some_super_secret',
+      client_id: process.env.CUSTOM_OPENID_CLIENT,
+      client_secret: process.env.CUSTOM_OPENID_SECRET,
       grant_types: ['authorization_code'],
-      redirect_uris: ['http://localhost:3000/api/custom_callback'],
+      redirect_uris: [process.env.CUSTOM_OPENID_REDIRECT_URI],
       response_types: ['code'],
     },
   ],
@@ -14,8 +15,8 @@ const configuration = {
   },
 };
 
-// todo: refresh token도 발급하게, openId, login, callback 부분 추상화한 부분 이용해서 중복 코드 제거
-const oidc = new Provider('http://localhost:3002', {
+// todo: refresh token도 발급하게, login시 보내는 callback uri로 들어가게, client에 따라 권한 나누게
+const oidc = new Provider(process.env.CUSTOM_OPENID_SERVER_URI, {
   ...configuration,
   claims: {
     openid: ['name'],
