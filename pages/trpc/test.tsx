@@ -5,15 +5,19 @@ export default function Test() {
   const [content, setContent] = useState('');
   const hello = trpc.hello.useQuery({ text: 'client' });
   const todolist = trpc.getTodo.useQuery();
-  const { mutateAsync: addTodo } = trpc.addTodo.useMutation();
   const { getTodo } = trpc.useContext();
+  const { mutate: addTodo } = trpc.addTodo.useMutation({
+    onSuccess: () => {
+      setContent('');
+      getTodo.invalidate();
+    },
+  });
 
   const onAdd = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await addTodo({
+    addTodo({
       content,
     });
-    getTodo.invalidate();
   };
 
   if (hello.isLoading || todolist?.isLoading) {
