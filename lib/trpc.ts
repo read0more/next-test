@@ -1,6 +1,12 @@
-import { httpBatchLink } from '@trpc/client';
+import {
+  createTRPCProxyClient,
+  createWSClient,
+  httpBatchLink,
+  wsLink,
+} from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
 import type { AppRouter } from '../server/routers/_app';
+import type { SocketAppRouter } from '../server/routers/_socketApp';
 
 function getBaseUrl() {
   if (typeof window !== 'undefined')
@@ -41,4 +47,14 @@ export const trpc = createTRPCNext<AppRouter>({
    * @link https://trpc.io/docs/ssr
    **/
   ssr: false,
+});
+
+export const socketTrpc = createTRPCProxyClient<SocketAppRouter>({
+  links: [
+    wsLink({
+      client: createWSClient({
+        url: `ws://localhost:3001/trpc`,
+      }),
+    }),
+  ],
 });
