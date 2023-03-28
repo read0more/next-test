@@ -8,7 +8,7 @@ export default class CustomOpenId extends OpenId {
   static async getInstance() {
     if (!CustomOpenId.instance) {
       const issuer = await Issuer.discover(
-        process.env.CUSTOM_OPENID_SERVER_URI!
+        `${process.env.CUSTOM_OPENID_SERVER_URI!}/oidc`
       );
       const client = new issuer.Client({
         client_id: process.env.CUSTOM_OPENID_CLIENT!,
